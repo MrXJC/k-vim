@@ -95,11 +95,13 @@ set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 set cursorcolumn
 " 突出显示当前行
 set cursorline
+au WinLeave * set nocursorline nocursorcolumn
+au WinEnter * set cursorline cursorcolumn
 
 
 " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉
 " 好处：误删什么的，如果以前屏幕打开，可以找回
-set t_ti= t_te=
+" set t_ti= t_te=
 
 
 " 鼠标暂不启用, 键盘党....
@@ -144,7 +146,7 @@ set showcmd
 set showmode
 
 " 在上下移动光标时，光标的上方或下方至少会保留显示的行数
-set scrolloff=7
+set scrolloff=12
 
 " set winwidth=79
 
@@ -535,7 +537,7 @@ cmap w!! w !sudo tee >/dev/null %
 inoremap kj <Esc>
 
 " 滚动Speed up scrolling of the viewport slightly
-nnoremap <C-e> 2<C-e>
+nnoremap <c-e> 2<c-e>
 nnoremap <C-y> 2<C-y>
 
 
@@ -564,6 +566,10 @@ nnoremap U <C-r>
 nnoremap <leader>ev :vsp $MYVIMRC<CR>
 nnoremap <leader>ez :vsp ~/.zshrc<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
+
+
+" w!! to sudo & write a file
+cmap w!! %!sudo tee >/dev/null %
 
 "==========================================
 " FileType Settings  文件类型设置
@@ -657,7 +663,7 @@ endif
 set background=dark
 set t_Co=256
 
-colorscheme solarized
+colorscheme monokai
 " colorscheme molokai
 
 
