@@ -23,7 +23,8 @@ cp ~/.tmux.conf ~/.tmux.conf_bak
 
 2. just get the file
 
-curl https://raw.githubusercontent.com/MrXJC/X-vim/X-tmux/master/tmux.conf > ~/.tmux.conf
+curl https://raw.githubusercontent.com/MrXJC/X-vim/master/X-tmux/tmux.conf > ~/.tmux.conf
+
 
 3. Done, enjoy it
 ```
