@@ -46,8 +46,8 @@ Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 " 代码自动补全
 " 迄今为止用到的最好的自动VIM自动补全插件
 " 重启 :YcmRestartServer
-" Plug 'Valloric/YouCompleteMe'
-Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+Plug 'Valloric/YouCompleteMe'
+"Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 " 自动补全单引号，双引号等
 Plug 'Raimondi/delimitMate'
 " 自动补全html/xml标签
@@ -95,6 +95,7 @@ Plug 'terryma/vim-expand-region'
 " multiplecursors
 Plug 'terryma/vim-multiple-cursors'
 
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 " quick locate file or function
 " 文件搜索
 " change to https://github.com/ctrlpvim/ctrlp.vim
@@ -199,7 +200,6 @@ if count(g:bundle_groups, 'python')
     Plug 'fisadev/vim-isort'
     " Shift-V 上下选中, ctrl + i 规范化
     let g:vim_isort_map = '<C-i>'
-    autocmd BufWritePost *.py :!isort %
 endif
 
 if count(g:bundle_groups, 'php')
@@ -336,7 +336,7 @@ if has_key(g:plugs, 'syntastic')
             Errors
         endif
     endfunction
-    nnoremap <Leader>se :call ToggleErrors()<cr>
+    nnoremap <Leader>cr :call ToggleErrors()<cr>
 
     " ,en ,ep to jump between errors
     function! <SID>LocationPrevious()
@@ -407,7 +407,7 @@ if has_key(g:plugs, 'ale')
             lopen
         endif
     endfunction
-    nnoremap <Leader>se :call ToggleErrors()<cr>
+    nnoremap <Leader>cr :call ToggleErrors()<cr>
 
     let g:ale_set_highlights = 1
     highlight clear ALEErrorSign
@@ -527,8 +527,8 @@ endif
 " }}}
 
 " easyalign {{{
-    vmap <Leader>ea <Plug>(EasyAlign)
-    nmap <Leader>ea <Plug>(EasyAlign)
+    vmap <Leader>a <Plug>(EasyAlign)
+    nmap <Leader>a <Plug>(EasyAlign)
     if !exists('g:easy_align_delimiters')
     let g:easy_align_delimiters = {}
     endif
@@ -591,11 +591,42 @@ endif
 " }}}
 
 " ################### 功能相关 ###################
+" don't show the help in normal mode
+let g:Lf_HideHelp = 1
+let g:Lf_UseCache = 0
+let g:Lf_UseVersionControlTool = 0
+let g:Lf_IgnoreCurrentBufferName = 1
+" popup mode
+" let g:Lf_WindowPosition = 'popup'
+let g:Lf_PreviewInPopup = 1
+let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
+let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+
+let g:Lf_ShortcutF = "<leader>ff"
+noremap <leader>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
+noremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
+noremap <leader>ft :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
+noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
+
+" noremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR>
+" noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR>
+" search visually selected text literally
+xnoremap gf :<C-U><C-R>=printf("Leaderf! rg -F -e %s ", leaderf#Rg#visual())<CR>
+noremap go :<C-U>Leaderf! rg --recall<CR>
+
+" should use `Leaderf gtags --update` first
+let g:Lf_GtagsAutoGenerate = 0
+let g:Lf_Gtagslabel = 'native-pygments'
+noremap <leader>fr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
+noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
+noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
 
 " ctrlp ctrlpfunky{{{
     let g:ctrlp_map = '<leader>p'
     let g:ctrlp_cmd = 'CtrlP'
-    map <leader>f :CtrlPMRU<CR>
+    " map <leader>fm :CtrlPMRU<CR>
     let g:ctrlp_custom_ignore = {
         \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
         \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
@@ -616,19 +647,17 @@ endif
 
     " ctrlpfunky
     " ctrlp插件1 - 不用ctag进行函数快速跳转
-    nnoremap <Leader>fu :CtrlPFunky<Cr>
+    nnoremap <leader>fs :CtrlPFunky<Cr>
     " narrow the list down with a word under cursor
-    nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+    " nnoremap <leader>fS :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
     let g:ctrlp_funky_syntax_highlight = 1
 
     let g:ctrlp_extensions = ['funky']
-
-    nnoremap <Leader>sp :CtrlSF<CR>
 " }}}
 
 
 " ctrlsf {{{
-    nmap \ <Plug>CtrlSFCwordPath<CR>
+    nmap <Leader>fu <Plug>CtrlSFCwordPath<CR>
     " let g:ctrlsf_position = 'below'
     " let g:ctrlsf_winsize = '30%'
     let g:ctrlsf_auto_close = 0
@@ -654,7 +683,7 @@ endif
     " :Gdiff  :Gstatus :Gvsplit
     nnoremap <leader>ge :Gdiff<CR>
     " not ready to open
-    " <leader>gb maps to :Gblame<CR>
+    nnoremap <leader>gb maps to :Gblame<CR>
     " <leader>gs maps to :Gstatus<CR>
     " <leader>gd maps to :Gdiff<CR>  和现有冲突
     " <leader>gl maps to :Glog<CR>
@@ -677,9 +706,6 @@ endif
 
 " ################### 显示增强 ###################
 
-" monokai
-Plug 'sickill/vim-monokai'
-
 " airline {{{
     if !exists('g:airline_symbols')
         let g:airline_symbols = {}
@@ -693,7 +719,10 @@ Plug 'sickill/vim-monokai'
     " 是否打开tabline
     let g:airline#extensions#tabline#enabled = 1
     let g:airline_theme="light"
+    
 " }}}
+
+
 
 " rainbow_parentheses {{{
     " 不加入这行, 防止黑色括号出现, 很难识别
@@ -779,7 +808,7 @@ Plug 'sickill/vim-monokai'
 
 " 标签导航
 " tagbar {{{
-    nmap <F9> :TagbarToggle<CR>
+    nmap <leader>ct :TagbarToggle<CR>
     let g:tagbar_autofocus = 1
     " let g:tagbar_autoshowtag = 1
     " let g:tagbar_show_visibility = 1
@@ -840,7 +869,7 @@ Plug 'sickill/vim-monokai'
 
     let g:quickrun_no_default_key_mappings = 1
     nmap <Leader>qr <Plug>(quickrun)
-    map <F10> :QuickRun<CR>
+    " map <F10> :QuickRun<CR>
 " }}}
 
 
