@@ -1,47 +1,10 @@
-"==========================================
-" Author: MrX
-" Version: 10
-" Email:
-" BlogPost:
-" ReadMe: README.md
-" Donation:
-" Last_modify: 2020-07-05
-" Sections:
-"       -> Initial Plugin 加载插件
-"       -> General Settings 基础设置
-"       -> Display Settings 展示/排版等界面格式设置
-"       -> FileEncode Settings 文件编码设置
-"       -> Others 其它配置
-"       -> HotKey Settings  自定义快捷键
-"       -> FileType Settings  针对文件类型的设置
-"       -> Theme Settings  主题设置
-"
-"       -> 插件配置和具体设置在vimrc.bundles中
-" Note: Don't put anything in your .vimrc you don't understand!
-"==========================================
-
-"==========================================
-" Initial Plugin 加载插件
-"==========================================
+set keep-english-in-normal-and-restore-in-insert
 
 " 修改leader键
 let mapleader = ','
 let g:mapleader = ','
 
-" 开启语法高亮
-syntax on
 
-" install bundles
-if filereadable(expand("~/.vimrc.bundles"))
-  source ~/.vimrc.bundles
-elseif filereadable(expand("~/.config/nvim/vimrc.bundles")) " neovim
-  source ~/.config/nvim/vimrc.bundles
-endif
-
-" ensure ftdetect et al work by including this after the bundle stuff
-filetype plugin indent on
-
-" NOTE: 以下配置有详细说明，一些特性不喜欢可以直接注解掉
 
 "==========================================
 " General Settings 基础设置
@@ -49,45 +12,7 @@ filetype plugin indent on
 
 
 " history存储容量
-set history=2000
-
-" 检测文件类型
-filetype on
-" 针对不同的文件类型采用不同的缩进格式
-filetype indent on
-" 允许插件
-filetype plugin on
-" 启动自动补全
-filetype plugin indent on
-
-" 文件修改之后自动载入
-set autoread
-" 启动的时候不显示那个援助乌干达儿童的提示
-set shortmess=atI
-
-" 备份,到另一个位置. 防止误删, 目前是取消备份
-"set backup
-"set backupext=.bak
-"set backupdir=/tmp/vimbk/
-
-" 取消备份。 视情况自己改
-set nobackup
-" 关闭交换文件
-set noswapfile
-
-
-" TODO: remove this, use gundo
-" create undo file
-" if has('persistent_undo')
-  " " How many undos
-  " set undolevels=1000
-  " " number of lines to save for undo
-  " set undoreload=10000
-  " " So is persistent undo ...
-  " "set undofile
-  " set noundofile
-  " " set undodir=/tmp/vimundo/
-" endif
+set history=10000
 
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
@@ -99,30 +24,10 @@ au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
 
 
-" 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉
-" 好处：误删什么的，如果以前屏幕打开，可以找回
-" set t_ti= t_te=
-
-
-" 鼠标暂不启用, 键盘党....
-set mouse-=a
-" 启用鼠标
-" set mouse=a
-" Hide the mouse cursor while typing
-" set mousehide
-
-
 " 修复ctrl+m 多光标操作选择的bug，但是改变了ctrl+v进行字符选中时将包含光标下的字符
 set selection=inclusive
 set selectmode=mouse,key
 
-" change the terminal's title
-set title
-" 去掉输入错误的提示声音
-set novisualbell
-set noerrorbells
-set t_vb=
-set tm=500
 
 " Remember info about open buffers on close
 set viminfo^=%
@@ -243,7 +148,7 @@ function! NumberToggle()
     set relativenumber
   endif
 endfunc
-nnoremap <C-n> :call NumberToggle()<cr>
+" nnoremap <C-n> :call NumberToggle()<cr>
 
 " 防止tmux下vim的背景色显示异常
 " Refer: http://sunaku.github.io/vim-256color-bce.html
@@ -254,35 +159,6 @@ if &term =~ '256color'
   set t_ut=
 endif
 
-"==========================================
-" FileEncode Settings 文件编码,格式
-"==========================================
-" 设置新文件的编码为 UTF-8
-set encoding=utf-8
-" 自动判断编码时，依次尝试以下编码：
-set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
-set helplang=cn
-"set langmenu=zh_CN.UTF-8
-"set enc=2byte-gb18030
-" 下面这句只影响普通模式 (非图形界面) 下的 Vim
-set termencoding=utf-8
-
-" Use Unix as the standard file type
-set ffs=unix,dos,mac
-
-" 如遇Unicode值大于255的文本，不必等到空格再折行
-set formatoptions+=m
-" 合并两行中文时，不在中间加空格
-set formatoptions+=B
-
-
-"==========================================
-" others 其它设置
-"==========================================
-" vimrc文件修改之后自动加载, windows
-autocmd! bufwritepost _vimrc source %
-" vimrc文件修改之后自动加载, linux
-autocmd! bufwritepost .vimrc source %
 
 " 自动补全配置
 " 让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
@@ -299,27 +175,6 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 " 回车即选中当前项
 inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
 
-" In the quickfix window, <CR> is used to jump to the error under the
-" cursor, so undefine the mapping there.
-autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
-" quickfix window  s/v to open in split window,  ,gd/,jd => quickfix window => open it
-autocmd BufReadPost quickfix nnoremap <buffer> v <C-w><Enter><C-w>L
-autocmd BufReadPost quickfix nnoremap <buffer> s <C-w><Enter><C-w>K
-
-" command-line window
-autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
-
-
-" 上下左右键的行为 会显示其他信息
-inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
-inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
-inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
-inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
-
-" 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-endif
 
 "==========================================
 " HotKey Settings  自定义快捷键设置
@@ -327,11 +182,6 @@ endif
 
 " 主要按键重定义
 
-" 关闭方向键, 强迫自己用 hjkl
-map <Left> <Nop>
-map <Right> <Nop>
-map <Up> <Nop>
-map <Down> <Nop>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
@@ -358,14 +208,14 @@ function! HideNumber()
   endif
   set number?
 endfunc
-nnoremap <leader>sn :call HideNumber()<CR>
+nnoremap <F2> :call HideNumber()<CR>
 " F3 显示可打印字符开关
-nnoremap <leader>sl :set list! list?<CR>
+nnoremap <F3> :set list! list?<CR>
 " F4 换行开关
-nnoremap <leader>sw :set wrap! wrap?<CR>
+nnoremap <F4> :set wrap! wrap?<CR>
 
 " F6 语法开关，关闭语法可以加快大文件的展示
-nnoremap <leader>sg :exec exists('syntax_on') ? 'syn off' : 'syn on'<CR>
+nnoremap <F6> :exec exists('syntax_on') ? 'syn off' : 'syn on'<CR>
 
 set pastetoggle=<F5>            "    when in insert mode, press <F5> to go to
                                 "    paste mode, where you can paste mass data
@@ -387,10 +237,10 @@ inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 
 " 分屏窗口移动, Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+nmap <C-j> <C-W>j
+nmap <C-k> <C-W>k
+nmap <C-h> <C-W>h
+nmap <C-l> <C-W>l
 
 
 " http://stackoverflow.com/questions/13194428/is-better-way-to-zoom-windows-in-vim-than-zoomwin
@@ -428,7 +278,7 @@ cnoremap <C-e> <End>
 
 " 搜索相关
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
+nnoremap <space> /
 " 进入搜索Use sane regexes"
 nnoremap / /\v
 vnoremap / /\v
@@ -464,7 +314,6 @@ noremap <right> :bn<CR>
 " tab 操作
 " http://vim.wikia.com/wiki/Alternative_tab_navigation
 " http://stackoverflow.com/questions/2005214/switching-to-a-particular-tab-in-vim
-
 " tab切换
 map <leader>th :tabfirst<cr>
 map <leader>tl :tablast<cr>
@@ -503,7 +352,6 @@ autocmd TabLeave * let g:last_active_tab = tabpagenr()
 nnoremap <C-t>     :tabnew<CR>
 inoremap <C-t>     <Esc>:tabnew<CR>
 
-
 " => 选中及操作改键
 
 " 调整缩进后自动选中，方便再次操作
@@ -511,7 +359,7 @@ vnoremap < <gv
 vnoremap > >gv
 
 " y$ -> Y Make Y behave like other capitals
-map Y y$
+nnoremap Y y$
 
 " 复制选中区到系统剪切板中
 vnoremap <leader>y "+y
@@ -522,7 +370,7 @@ vnoremap <leader>y "+y
 " nnoremap <silent> p p`]
 
 " select all
-map <Leader>sa ggVG
+nnoremap <Leader>sa ggVG
 
 " 选中并高亮最后一次插入的内容
 nnoremap gv `[v`]
@@ -559,130 +407,85 @@ nnoremap ` '
 " remap U to <C-r> for easier redo
 nnoremap U <C-r>
 
-" Quickly edit/reload the vimrc file
-" nmap <silent> <leader>ev :e $MYVIMRC<CR>
-" nmap <silent> <leader>sv :so $MYVIMRC<CR>
-" edit vimrc/zshrc and load vimrc bindings
-nnoremap <leader>ev :vsp $MYVIMRC<CR>
-nnoremap <leader>ez :vsp ~/.zshrc<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>
-
 
 " w!! to sudo & write a file
 cmap w!! %!sudo tee >/dev/null %
 
-"==========================================
-" FileType Settings  文件类型设置
-"==========================================
+" E和R是为了保持与Chrome中的SurfingKeys的键位一致
+noremap E gT
+noremap R gt
+noremap J <ESC>:action EditorJoinLines<CR>
 
-" 具体编辑文件类型的一般设置，比如不要 tab 等
-autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
-autocmd FileType ruby,javascript,html,css,xml set tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
-autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=markdown.mkd
-autocmd BufRead,BufNewFile *.part set filetype=html
-autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
+" Insert mode shortcut
+inoremap <C-h> <Left>
+inoremap <C-j> <C-n>
+inoremap <C-k> <C-p>
+inoremap <C-l> <Right>
+inoremap <C-a> <Home>
+inoremap <C-e> <End>
+inoremap <C-d> <Delete>
+inoremap <C-b> <Backspace>
 
-" disable showmatch when use > in php
-au BufWinEnter *.php set mps-=<:>
+vnoremap v <Esc>
 
+noremap <leader>ga :action GotoAction<CR>
+noremap <leader>gc :action GotoClass<CR>
+noremap <leader>gd :action GotoDeclaration<CR>
+noremap <leader>gi :action GotoImplementation<CR>
+noremap <leader>gs :action GotoSuperMethod<CR>
+noremap <leader>gt :action GotoTest<CR>
+nnoremap <Space>sf :action ShowFilePath<CR>
+nnoremap <Space>fs :action FileStructurePopup<CR>
+nnoremap <Space>gs :action Switcher<CR>
 
+noremap <leader>rc :action ReformatCode<CR>
+noremap <leader>oi :action OptimizeImports<CR>
+" 重命名
+nnoremap <leader>re :action RenameElement<CR>
+nnoremap <leader>qr :action Run<CR>
+nnoremap <leader>qd :action QuickJavaDoc<CR>
 
-" 保存python文件时删除多余空格
-fun! <SID>StripTrailingWhitespaces()
-    let l = line(".")
-    let c = col(".")
-    %s/\s\+$//e
-    call cursor(l, c)
-endfun
-autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+" ==================================================
+" Emulated Vim Plugins
+" ==================================================
+set surround
+set multiple-cursors
+set commentary
+nnoremap <Leader>su :action ShowUsages<CR>
+nnoremap <Leader>fu :action FindUsages<CR>
+nnoremap <Leader><space> <space><ESC>:action CodeCompletion<CR>
 
+" inoremap <Leader><space> <space><ESC>:action CodeCompletion<CR>
 
-" 定义函数AutoSetFileHead，自动插入文件头
-autocmd BufNewFile *.sh,*.py exec ":call AutoSetFileHead()"
-function! AutoSetFileHead()
-    "如果文件类型为.sh文件
-    if &filetype == 'sh'
-        call setline(1, "\#!/bin/bash")
-    endif
+nnoremap <leader>rf :action RecentFiles<CR>
 
-    "如果文件类型为python
-    if &filetype == 'python'
-        " call setline(1, "\#!/usr/bin/env python")
-        " call append(1, "\# encoding: utf-8")
-        call setline(1, "\# -*- coding: utf-8 -*-")
-    endif
+nnoremap <Leader>fs :action ToggleFullScreen<CR>
 
-    normal G
-    normal o
-    normal o
-endfunc
+nnoremap <leader>sew :action SearchEverywhere<CR>
 
+nnoremap <Leader>cmd :action ChooseRunConfiguration<CR>
 
-" 设置可以高亮的关键字
-if has("autocmd")
-  " Highlight TODO, FIXME, NOTE, etc.
-  if v:version > 701
-    autocmd Syntax * call matchadd('Todo',  '\W\zs\(TODO\|FIXME\|CHANGED\|DONE\|XXX\|BUG\|HACK\)')
-    autocmd Syntax * call matchadd('Debug', '\W\zs\(NOTE\|INFO\|IDEA\|NOTICE\)')
-  endif
-endif
+" comment
+nnoremap <Leader>cc :action CommentByLineComment<CR>
+" pretend :) uncomment
+nnoremap <Leader>cu :action CommentByLineComment<CR>
 
-"==========================================
-" TEMP 设置, 尚未确定要不要
-"==========================================
-
-" beta
-" https://dougblack.io/words/a-good-vimrc.html
-set lazyredraw          " redraw only when we need to.
-
-
-"==========================================
-" Theme Settings  主题设置
-"==========================================
-
-" Set extra options when running in GUI mode
-if has("gui_running")
-    set guifont=Monaco:h14
-    if has("gui_gtk2")   "GTK2
-        set guifont=Monaco\ 12,Monospace\ 12
-    endif
-    set guioptions-=T
-    set guioptions+=e
-    set guioptions-=r
-    set guioptions-=L
-    set guitablabel=%M\ %t
-    set showtabline=1
-    set linespace=2
-    set noimd
-    set t_Co=256
-endif
+nnoremap <Leader>at :action ActivateTerminalToolWindow<CR>
+nnoremap <Leader>ap :action ActivateProjectToolWindow<CR>
+nnoremap <Leader>ar :action ActivateRunToolWindow<CR>
+nnoremap <Leader>ad :action ActivateDocumentationToolWindow<CR>
 
 
+" <C-j>
+" inoremap <C-j> <ESC>:action InsertLiveTemplate<CR>
 
-" theme主题
-set background=dark
-set t_Co=256
+noremap f :action AceAction<CR>
+noremap F :action AceTargetAction<CR>
 
-colorscheme monokai
-" colorscheme molokai
-" 使用 256 颜色库
-" let base16colorspace=256
-" 使用 base16 中 base16-oceanicnext
-" colorscheme base16-oceanicnext
-
-" 设置标记一列的背景颜色和数字一行颜色一致
-hi! link SignColumn   LineNr
-hi! link ShowMarksHLl DiffAdd
-hi! link ShowMarksHLu DiffChange
-
-" for error highlight，防止错误整行标红导致看不清
-highlight clear SpellBad
-highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
-highlight clear SpellCap
-highlight SpellCap term=underline cterm=underline
-highlight clear SpellRare
-highlight SpellRare term=underline cterm=underline
-highlight clear SpellLocal
-highlight SpellLocal term=underline cterm=underline
-
-set mmp=5000
+set easymotion
+map <Leader><leader>h <Plug>(easymotion-linebackward)
+" nnoremap <Leader><Leader>j <Plug>(easymotion-j)
+" nnoremap <Leader><Leader>k <Plug>(easymotion-k)
+map <Leader><leader>l <Plug>(easymotion-lineforward)
+" " 重复上一次操作, 类似repeat插件, 很强大
+map <Leader><leader>. <Plug>(easymotion-repeat)

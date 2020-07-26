@@ -37,6 +37,8 @@ else
     Plug 'w0rp/ale'
 endif
 
+Plug 'mhinz/vim-startify'
+Plug '907th/vim-auto-save'
 " Group dependencies, vim-snippets depends on ultisnips
 " 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
 " Snippets are separated from the engine. Add this if you want them:
@@ -46,7 +48,7 @@ Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 " 代码自动补全
 " 迄今为止用到的最好的自动VIM自动补全插件
 " 重启 :YcmRestartServer
-" Plug 'Valloric/YouCompleteMe'
+" Plug 'Valloric/YouCompleteMe' 
 "Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 " 自动补全单引号，双引号等
 Plug 'Raimondi/delimitMate'
@@ -145,6 +147,8 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'tomasr/molokai'
 " monokai
 Plug 'sickill/vim-monokai'
+Plug 'chriskempson/base16-vim'
+Plug 'whatyouhide/vim-gotham'
 
 " nav
 " nerdtree nerdtreetabs
@@ -170,8 +174,13 @@ if count(g:bundle_groups, 'tmux')
     Plug 'christoomey/vim-tmux-navigator'
 endif
 
+
+
 if count(g:bundle_groups, 'markdown')
+    Plug 'mzlogin/vim-markdown-toc'
     Plug 'plasticboy/vim-markdown', {'for': 'md'}
+    Plug 'iamcco/mathjax-support-for-mkdp'
+    Plug 'iamcco/markdown-preview.vim'
     " https://github.com/suan/vim-instant-markdown
     " npm -g install instant-markdown-d
     " Plug 'suan/vim-instant-markdown'
@@ -439,6 +448,8 @@ endif
     " 跳转到定义处, 分屏打开
     let g:ycm_goto_buffer_command = 'horizontal-split'
     let g:ycm_register_as_syntastic_checker = 0
+    let g:ycm_path_to_python_interpreter='/usr/local/bin/python3'
+    let g:ycm_server_python_interpreter = "/usr/local/bin/python3"
     " nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
     nnoremap <leader>go :YcmCompleter GoTo<CR>
     nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
@@ -824,6 +835,17 @@ noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
         \ ]
     \ }
 
+    "设置tagber对于markdown的支持
+    let g:tagbar_type_markdown = {
+        \ 'ctagstype' : 'markdown',
+        \ 'kinds' : [
+            \ 'h:Chapter',
+            \ 'i:Section',
+            \ 'k:Paragraph',
+            \ 'j:Subparagraph'
+        \ ]
+    \ }
+
     " go语言的tagbar配置
     " 1. install gotags 'go get -u github.com/jstemmer/gotags'
     " 2. make sure `gotags` in you shell PATH, you can call check it with `which gotags`
@@ -896,9 +918,49 @@ noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
     let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go', 'java'] }
 " }}}
 
+if count(g:bundle_groups, 'markdown')
 " markdown {{{
+    let g:mkdp_browser  ='/Applications/Google Chrome.app'
+    let g:mkdp_preview_options = {
+        \ 'mkit': {},
+        \ 'katex': {},
+        \ 'uml': {},
+        \ 'maid': {},
+        \ 'disable_sync_scroll': 0,
+        \ 'sync_scroll_type': 'middle',
+        \ 'hide_yaml_meta': 1,
+        \ 'sequence_diagrams': {}
+        \ }
+    let g:mkdp_auto_close=0
+    let g:mkdp_refresh_slow = 0
+    let g:vim_markdown_anchorexpr = "'<<'.v:anchor.'>>'"
+    let g:vim_markdown_math = 1
+    let g:mkdp_auto_start = 0
+    let g:vim_markdown_strikethrough = 1
     let g:vim_markdown_folding_disabled=1
+    let g:vim_markdown_math = 1
+    nmap <silent> <leader>mp <Plug>MarkdownPreview        " for normal mode
+    imap <silent> <leader>mp <Plug>MarkdownPreview        " for insert mode
+    nmap <silent> <leader>ms <Plug>StopMarkdownPreview    " for normal mode
+    imap <silent> <leader>ms <Plug>StopMarkdownPreview    " for insert mode
+    "安装插件
+    " Plug 'mzlogin/vim-markdown-toc'
+    "在当前光标后生成目录
+    " ":GenTocMarked
+    "更新目录
+    " ":UpdateToc
+    "取消储存时自动更新目录
+    let g:vmt_auto_update_on_save = 0
+    function RToc()
+        exe "/-toc .* -->"
+        let lstart=line('.')
+        exe "/-toc -->"
+        let lnum=line('.')
+        execute lstart.",".lnum."g/           /d"
+    endfunction
+
 " }}}
+endif
 
 
 " javascript {{{
@@ -1039,3 +1101,34 @@ nnoremap <Leader>rc :call Replace(1, 0, input('Replace '.expand('<cword>').' wit
 " 确认、整词
 nnoremap <Leader>rcw :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
 nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
+
+let g:auto_save = 1
+let g:auto_save_events = ["InsertLeave", "TextChanged",  "CursorHoldI","CursorHold", "CompleteDone"]
+let g:startify_files_number = 10
+" let g:startify_custom_header = [
+" \ '                             ███████████',
+" \ '                          ███████████████████',
+" \ '                         ███████████████████',
+" \ '                         ██████████████████████░',
+" \ '           ██░           █████████████████████████░░',
+" \ '            ░██░        ███████████████████████████░',
+" \ '               ░██░    █████████████████████████████████░',
+" \ '                 ████████████████████████████████████████░',
+" \ '                    ███████████████████████████████████░',
+" \ '   █████     ███  ░█████████████████████████░░░',
+" \ '    █████     █    ███░░██████████████████████░',
+" \ '    █  ████░  █    ███   ░████████████████████████░',
+" \ '    █   █████ █    ███████░  ██████████████████████░',
+" \ '    █        ██    ███░         ████████████████████',
+" \ '   ███       ██  ░░████████░     ░███████████████████',
+" \ '                                   ██████████████████',
+" \ '                     █████████░   ░███████████████████',
+" \ '                       ███   ████  ░██░  ████████████░',
+" \ '                       ███   ░███    ██░  ████████████',
+" \ '                       ███░████░     ░██░  ██████████░',
+" \ '                       ███ ███░       ░██░ ██ ░███████',
+" \ '                       ███   ████      ░███    ██████░',
+" \ '                       ███    ████░     ░█      ░████░',
+" \ '                                                  ███',
+" \ '                                                   ░█░',
+" \]
