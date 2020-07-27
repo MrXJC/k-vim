@@ -4,7 +4,7 @@ X-vim
 
 > 主要参考项目k-vim，加入自己修改的配置
 
-> 相关tmux的设置 [X-tmux](https://github.com/MrXJC/X-vim/master/X-tmux)
+> 相关tmux的设置 [X-tmux](https://github.com/MrXJC/X-vim/tree/master/X-tmux)
 
 # 安装步骤
 
