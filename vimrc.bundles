@@ -38,7 +38,7 @@ else
 endif
 
 Plug 'mhinz/vim-startify'
-Plug '907th/vim-auto-save'
+" Plug '907th/vim-auto-save'
 " Group dependencies, vim-snippets depends on ultisnips
 " 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
 " Snippets are separated from the engine. Add this if you want them:
@@ -48,7 +48,7 @@ Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 " 代码自动补全
 " 迄今为止用到的最好的自动VIM自动补全插件
 " 重启 :YcmRestartServer
-" Plug 'Valloric/YouCompleteMe' 
+Plug 'Valloric/YouCompleteMe' 
 "Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 " 自动补全单引号，双引号等
 Plug 'Raimondi/delimitMate'

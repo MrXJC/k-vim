@@ -174,3 +174,28 @@ snippet dk "api doc"
         code:
 
 endsnippet
+
+snippet pdb ""
+import ipdb; ipdb.set_trace()
+endsnippet
+
+snippet ct "count time"
+import time
+start = time.time()
+${1:${VISUAL}}
+print("Cost time :", time.time()-start)
+endsnippet
+
+
+
+global !p
+def list_files():
+    files = []
+    for f in os.listdir('.'):
+        files.append(f)
+    return files
+endglobal
+
+snippet ls "list source files" iw
+`!p snip.rv = list_files()`
+endsnippet
