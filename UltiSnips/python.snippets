@@ -199,3 +199,7 @@ endglobal
 snippet ls "list source files" iw
 `!p snip.rv = list_files()`
 endsnippet
+
+snippet jsonp
+print(json.dumps(${1:${VISUAL}}, ensure_ascii=False, indent=4))
+endsnippet
